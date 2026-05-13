@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Declares which directories FileProvider can share files from.
+
+    "files-path" maps to Context.getFilesDir() — this is where
+    FirPdfGenerator writes to (filesDir/fir_output/).
+
+    Place this file at:  app/src/main/res/xml/file_paths.xml
+-->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <files-path
+        name="fir_pdfs"
+        path="fir_output/" />
+</paths>

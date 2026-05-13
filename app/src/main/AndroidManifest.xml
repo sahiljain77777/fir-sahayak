@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ── Permissions ──────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- ── Application ──────────────────────────────────────────────────────── -->
+    <application
+        android:allowBackup="true"
+        android:largeHeap="true"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FirSahayak">
+
+
+
+        <uses-native-library android:name="libvndksupport.so" android:required="false"/>
+        <uses-native-library android:name="libOpenCL.so" android:required="false"/>
+        <uses-native-library android:name="libcdsprpc.so " android:required="false"/>
+
+
+        <!-- ML Kit: download models on install -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr_devanagari,ocr" />
+
+        <!-- ── FileProvider for sharing generated PDF ────────────────────── -->
+        <!--
+            Allows sharing app-private PDF files (in filesDir/fir_output/)
+            via Intent.ACTION_SEND without exposing the raw file path.
+            The authority MUST match: "${applicationId}.fileprovider"
+        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FirSahayak">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>
