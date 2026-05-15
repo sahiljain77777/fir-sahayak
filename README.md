@@ -401,7 +401,7 @@ suspend fun generate(context: Context, entity: FirEntity): File
 <details>
 <summary><b>🏗️ App Architecture</b></summary>
 
-### MVVM with StateFlow
+### Data Binding Architecture with StateFlow
 ```
 FirViewModel (AndroidViewModel)
     │
@@ -555,7 +555,6 @@ adb push gemma-4-E2B-it.litertlm /data/local/tmp/llm/
 | STT | Android SpeechRecognizer API |
 | PDF Input | Android PdfRenderer |
 | PDF Output | Android PdfDocument |
-| Architecture | MVVM · StateFlow · channelFlow |
 | Storage | On-device only — zero cloud |
 
 ---
@@ -564,10 +563,10 @@ adb push gemma-4-E2B-it.litertlm /data/local/tmp/llm/
 
 | Current Limitation | Planned Fix |
 |---|---|
-| Hindi STT requires internet (Android SpeechRecognizer) | Vosk on-device STT — fully offline audio path |
+| Hindi STT requires internet (Android SpeechRecognizer) | On device STT — fully offline audio path |
 | Audio mode infers BNS sections only | Multi-act audio inference (BNS + POCSO, Dowry Act, etc.) |
 | Structured output is UI display only | JSON export + CCTNS database integration |
-| Hindi and English only | Tamil, Telugu, Bengali, Marathi OCR and voice |
+| Hindi and English only | Punjabi,Tamil, Telugu, Bengali, Marathi OCR and voice |
 
 ---
 
