@@ -13,6 +13,29 @@ import kotlinx.coroutines.withContext
 import com.google.ai.edge.litertlm.ExperimentalApi
 import com.google.ai.edge.litertlm.ExperimentalFlags
 
+/*
+ * LlmEngine.kt — Gemma 4 E2B inference engine wrapper.
+ *
+ * Wraps Google AI Edge LiteRT (LiteRT LM) for on-device CPU inference.
+ * Holds a single Engine instance for the app lifetime.
+ *
+ * Key responsibilities:
+ *   • initialize()          — loads the .litertlm model file; tries CPU backend
+ *   • extractFirEntities()  — builds the full prompt (system prompt + document
+ *     text), runs inference with greedy decoding (temp=0.01, topK=1, topP=0.0),
+ *     and streams each token back via the onToken callback
+ *   • Two system prompts (companion object):
+ *       FIR_SYSTEM_PROMPT_PDF   — structured OCR document extraction with
+ *                                 pipe-delimited input parsing and multi-act rules
+ *       FIR_SYSTEM_PROMPT_AUDIO — spoken complaint extraction with BNS section
+ *                                 inference, deduplication, and act name rules
+ *   • printLargeLog()       — chunks logcat output to bypass the 4000-char limit
+ *   • release()             — closes engine to free ~1.5 GB model memory
+ *
+ * Greedy decoding rationale: FIR extraction is deterministic by design —
+ * the same input must always produce the same structured JSON output.
+ */
+
 class LlmEngine(private val context: Context) {
 
     private var engine: Engine? = null
