@@ -33,14 +33,27 @@ private val AmberColor   = Color(0xFFB85C00)
 private val AmberBg      = Color(0xFFFDF6EC)
 private val AmberBorder  = Color(0xFFF0D9B5)
 
-/**
- * Shown after STT completes, before Gemma analysis.
- * User can read, correct, then confirm the transcript.
+/*
+ * TranscriptReviewScreen.kt — Human-in-the-loop STT correction screen.
  *
- * @param transcript  Raw text from Android STT
- * @param onConfirm   Called with (possibly edited) transcript → triggers Gemma
- * @param onReRecord  User wants to speak again → goes back to Idle
+ * Shown after Android SpeechRecognizer returns a transcript and before
+ * it is sent to Gemma. Allows the officer or complainant to read and
+ * correct any STT errors — especially names, addresses, and section
+ * numbers which are most commonly misheard.
+ *
+ * Key UI elements:
+ *   • Editable BasicTextField with full-width min-height 160dp
+ *   • "Edited" badge appears as soon as the text diverges from original
+ *   • Word count and character count update live as user types
+ *   • "WHAT TO CHECK" tip card guides the officer on common STT errors
+ *   • Primary CTA: "CONFIRM EDITS & ANALYSE" / "LOOKS CORRECT — ANALYSE"
+ *     (label changes based on whether any edits were made)
+ *   • Secondary CTA: "Re-record Audio" → calls onReRecord → UiState.Idle
+ *
+ * The confirmed (possibly edited) transcript is passed to onConfirm(),
+ * which triggers FirViewModel.confirmTranscript() → Gemma analysis.
  */
+ 
 @Composable
 fun TranscriptReviewScreen(
     transcript: String,
