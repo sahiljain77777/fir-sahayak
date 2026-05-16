@@ -32,6 +32,34 @@ private val MutedColor   = Color(0xFF6B6457)
 private val AccentBlue   = Color(0xFF1A3A5C)
 private val AmberColor   = Color(0xFFB85C00)
 
+
+/*
+ * PdfResultScreen.kt — Full-screen result view for the PDF analysis path.
+ *
+ * Shown after Gemma finishes extracting entities from a scanned/photographed
+ * FIR PDF. Converts the raw JSONObject from the parser into a FirEntity and
+ * displays every extracted field in structured, labelled result cards.
+ *
+ * Screen layout (top to bottom):
+ *   • TopAppBar with "← Back" navigation to reset and analyse another document
+ *   • SectionBreakdownCard — per-section severity, cognisability, bailability,
+ *     max punishment, and urgency score (routed to BnsOnly or MultiAct breakdown
+ *     depending on whether the FIR invokes multiple acts)
+ *   • Case Identifiers card — FIR number, police station, district, year
+ *   • Timeline card — filing date/time, incident date/time, day type
+ *   • Complainant card — name, DOB, occupation, address, contact
+ *   • Place of Occurrence card — address, direction/distance from PS, beat number
+ *   • Accused card — rendered only if at least one accused entry was extracted
+ *   • FIR Contents card — narrative summary extracted by Gemma
+ *   • Uncertain fields warning — amber box listing any fields Gemma could not
+ *     confidently extract, prompting manual verification by the officer
+ *   • Bottom action bar — "CLOSE AND ANALYSE ANOTHER" resets to Idle state
+ *
+ * Note: this screen is the PDF path equivalent of FirVerificationScreen
+ * (audio path). Unlike the audio path, fields here are read-only — the
+ * officer reviews extracted data but does not edit before generating a PDF.
+ */
+ 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PdfResultScreen(
