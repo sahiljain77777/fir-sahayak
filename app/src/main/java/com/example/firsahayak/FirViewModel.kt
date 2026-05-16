@@ -11,6 +11,29 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.File
 
+
+/*
+ * FirViewModel.kt — UI state machine and single source of truth.
+ *
+ * Bridges FirRepository (data layer) and Compose UI (view layer) using
+ * AndroidViewModel + StateFlow. All user actions funnel through here.
+ *
+ * UiState sealed class drives every screen transition:
+ *   Idle → Loading → TranscriptReview → Streaming → Verification → PdfReady
+ *   Idle → Loading → Streaming → Success  (PDF path)
+ *
+ * Key responsibilities:
+ *   • checkAndInitialize() — detects model at ADB path or app storage;
+ *     transitions to NeedDownload if not found
+ *   • analyseFromPdf()     — collects Progress flow, accumulates streaming
+ *     tokens into UiState.Streaming, lands on UiState.Success
+ *   • analyseFromAudio()   — runs STT via repo, lands on TranscriptReview
+ *   • confirmTranscript()  — sends edited transcript to Gemma, lands on
+ *     UiState.Verification with a fully parsed FirEntity
+ *   • generatePdf()        — calls FirPdfGenerator, lands on PdfReady
+ *   • downloadModel()      — streams download progress via UiState.Downloading
+ */
+
 class FirViewModel(app: Application) : AndroidViewModel(app) {
 
     private val repo = FirRepository(app)
