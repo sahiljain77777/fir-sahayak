@@ -27,6 +27,35 @@ private val AccentBlue   = Color(0xFF1A3A5C)
 private val GreenColor   = Color(0xFF1A6B3A)
 private val AmberColor   = Color(0xFFB85C00)
 
+
+/*
+ * SectionBreakdownCard.kt — Legal section severity display layer.
+ *
+ * Renders a full per-section breakdown for every act in a FirEntity.
+ * Entry point is SectionBreakdownCard(entity) which auto-routes to:
+ *
+ *   BnsOnlyBreakdown  — used for audio path and BNS-only PDFs.
+ *                       Passes all sections directly to BnsSeverityDb.
+ *
+ *   MultiActBreakdown — used for PDF FIRs that invoke multiple acts
+ *                       (e.g. BNS + POCSO + Dowry Act simultaneously).
+ *                       Separates BNS sections from other-act sections,
+ *                       queries each DB independently, and computes an
+ *                       overall severity as max(bnsScore, otherActScores).
+ *
+ * Each section row displays:
+ *   • Section number pill (dark blue = BNS, amber = other act)
+ *   • Severity badge (LOW / MEDIUM / HIGH / CRITICAL)
+ *   • Short title and plain-language definition
+ *   • Maximum punishment string
+ *   • Cognisable / Non-cognisable chip
+ *   • Bailable / Non-bailable chip
+ *   • Urgency score out of 10
+ *
+ * Unmatched sections (not found in either DB) are shown in an amber
+ * warning row prompting manual verification.
+ */
+
 // ─────────────────────────────────────────────────────────────────────────────
 // PUBLIC ENTRY POINT
 // Routes to BnsOnlyBreakdown (audio) or MultiActBreakdown (PDF with named acts)
