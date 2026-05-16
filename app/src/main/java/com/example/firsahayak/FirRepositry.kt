@@ -8,6 +8,27 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.Flow
 import org.json.JSONObject
 
+
+/*
+ * FirRepository.kt — Central data layer and pipeline orchestrator.
+ *
+ * Owns the two main analysis flows:
+ *   • analyseFromPdf()     — OCR → clean → Gemma → parse → Done
+ *   • analyseTranscript()  — Gemma → parse → Done (audio path)
+ *
+ * Key responsibilities:
+ *   • Runs ML Kit OCR via OcrEngine and feeds cleaned text to LlmEngine
+ *   • Streams Gemma tokens back to ViewModel via channelFlow (cross-dispatcher safe)
+ *   • cleanOcrActSectionMerge() — fixes OCR-split act/section lines and
+ *     normalises Devanagari/Bengali digits before text reaches Gemma
+ *   • parseAndMerge() — strips markdown fences, repairs truncated JSON,
+ *     and patches any fields Gemma missed using regex pre-extraction hints
+ *   • sanitiseOccurrence() — detects and fixes date/time field swaps
+ *     that Gemma occasionally produces (e.g. a date value in time_to)
+ *   • regexExtract() — fast pre-pass that pulls FIR number, dates, times,
+ *     phone numbers as fallback hints before LLM inference runs
+ */
+
 class FirRepository(private val context: Context) {
 
     private val ocr = OcrEngine(context)
