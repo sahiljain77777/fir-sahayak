@@ -47,6 +47,30 @@ private val AccentBlue   = Color(0xFF1A3A5C)
 private val GreenColor   = Color(0xFF1A6B3A)
 private val AmberColor   = Color(0xFFB85C00)
 
+/*
+ * MainActivity.kt — Single-activity entry point and Compose host.
+ *
+ * Responsibilities:
+ *   • Registers ActivityResultLaunchers for PDF file picker and
+ *     RECORD_AUDIO permission before the activity is created
+ *   • Pre-warms ML Kit Latin and Devanagari recognisers on startup
+ *     to reduce first-OCR latency
+ *   • Hosts FirSahayakApp composable which routes between all screens
+ *     based on FirViewModel.UiState
+ *   • sharePdf() — exposes the generated PDF file via FileProvider
+ *     using ACTION_SEND so it can be shared to any installed app
+ *
+ * Screen routing (in FirSahayakApp):
+ *   TranscriptReview → full-screen takeover
+ *   Verification     → full-screen takeover
+ *   PdfReady         → full-screen takeover
+ *   Success          → full-screen takeover (PDF path result)
+ *   All other states → Scaffold with InputPanel + ResultPanel
+ *
+ * ResultPanel handles: Idle, NeedDownload, Loading, Downloading,
+ * Streaming (live token display), Failure.
+ */
+
 class MainActivity : ComponentActivity() {
 
     private val viewModel: FirViewModel by viewModels()
