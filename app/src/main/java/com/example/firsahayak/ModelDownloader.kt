@@ -101,7 +101,7 @@ object ModelDownloader {
 
     /**
      * Download the model from DOWNLOAD_URL to app private storage.
-     * Supports resuming a partial download if interrupted.
+     * Restarts the downloading when partial downloaded if interrupted.
      * Reports download progress via onProgress(0..100).
      *
      * This is a suspend function — call it from a coroutine (viewModelScope).
