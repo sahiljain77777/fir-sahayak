@@ -115,6 +115,9 @@ object ModelDownloader {
         val finalFile = File(appStoragePath(context))
         val tempFile = File(context.filesDir, "$MODEL_FILENAME.tmp")
 
+        // If temp file is smaller than 1MB it's likely a corrupt stub —
+        // delete it and start fresh rather than resuming from bad bytes
+        
         if (tempFile.exists() && tempFile.length() < 1_048_576L) {
             Log.w(TAG, "Temp file too small (${tempFile.length()} bytes) — deleting, starting fresh")
             tempFile.delete()
