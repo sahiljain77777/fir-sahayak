@@ -88,6 +88,8 @@ dependencies {
     implementation("com.google.mlkit:text-recognition:16.0.0")
     implementation("com.google.mlkit:text-recognition-devanagari:16.0.0")
 
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
 
     // Testing
     testImplementation(libs.junit)
