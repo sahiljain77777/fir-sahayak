@@ -91,6 +91,14 @@ object ModelDownloader {
         else                                   -> "Not found"
     }
 
+    fun deleteTempFile(context: Context) {
+        val temp = File(context.filesDir, "$MODEL_FILENAME.tmp")
+        if (temp.exists()) {
+            temp.delete()
+            Log.i(TAG, "Deleted corrupt temp file — will restart from 0")
+        }
+    }
+
     /**
      * Download the model from DOWNLOAD_URL to app private storage.
      * Supports resuming a partial download if interrupted.
@@ -106,6 +114,11 @@ object ModelDownloader {
 
         val finalFile = File(appStoragePath(context))
         val tempFile = File(context.filesDir, "$MODEL_FILENAME.tmp")
+
+        if (tempFile.exists() && tempFile.length() < 1_048_576L) {
+            Log.w(TAG, "Temp file too small (${tempFile.length()} bytes) — deleting, starting fresh")
+            tempFile.delete()
+        }
 
         // Resume support — check how many bytes we already have
         val resumeFrom: Long = if (tempFile.exists()) tempFile.length() else 0L
