@@ -111,6 +111,10 @@ class FirViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun downloadModel(context: Context) {
+        // Delete any existing temp file before starting — avoids resuming
+        // from a position written during a previous crashed/killed session
+        ModelDownloader.deleteTempFile(context)
+        
         viewModelScope.launch {
             try {
                 ModelDownloader.downloadModel(context) { pct -> _state.value = UiState.Downloading(pct) }
